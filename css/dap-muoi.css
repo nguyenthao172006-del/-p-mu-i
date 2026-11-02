@@ -1,0 +1,326 @@
+/* Layout: one full-screen canvas stage in the avatar's own blue, chunky HUD chips on top, yellow "caught" card centred. Single deliberate look in both themes. */
+:root {
+  --wall-1: #5aaefc;
+  --wall-2: #3a8de6;
+  --ink: #1f2a33;
+  --paper: #fffaf0;
+  --card: #f6b81c;
+  --card-edge: #fff4d6;
+  --red: #e53b2f;
+  --red-d: #a92318;
+  --blue: #1f8ee8;
+  --blue-d: #0f5fa6;
+  --grey: #8e98a2;
+  --grey-d: #5c656e;
+  --orange: #f08a1c;
+  --orange-d: #b45f08;
+  --display: "Baloo 2", "Arial Rounded MT Bold", system-ui, sans-serif;
+  color-scheme: light;
+}
+html,
+body {
+  height: 100%;
+}
+[hidden] {
+  display: none !important;
+}
+body {
+  background: var(--wall-2);
+  color: var(--ink);
+  font-family: var(--display);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+#c {
+  position: fixed;
+  inset: 0;
+  display: block;
+  touch-action: manipulation;
+}
+
+.hud {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  right: max(12px, env(safe-area-inset-right, 0px));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: calc(100% - 24px);
+  z-index: 5;
+}
+.tag {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  left: max(12px, env(safe-area-inset-left, 0px));
+  z-index: 5;
+  color: var(--paper);
+  line-height: 1.05;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+.tag b {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+.tag span {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.b {
+  font-family: var(--display);
+  font-weight: 800;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #fff;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition:
+    transform 0.08s,
+    box-shadow 0.08s;
+}
+.b:active {
+  transform: translateY(3px);
+}
+.b:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+.chip {
+  font-size: 13px;
+  padding: 6px 12px 4px;
+  background: var(--orange);
+  box-shadow: 0 4px 0 var(--orange-d);
+}
+.chip:active {
+  box-shadow: 0 1px 0 var(--orange-d);
+}
+.red {
+  background: var(--red);
+  box-shadow: 0 5px 0 var(--red-d);
+}
+.blue {
+  background: var(--blue);
+  box-shadow: 0 5px 0 var(--blue-d);
+}
+.grey {
+  background: var(--grey);
+  box-shadow: 0 5px 0 var(--grey-d);
+}
+.red:active {
+  box-shadow: 0 2px 0 var(--red-d);
+}
+.blue:active {
+  box-shadow: 0 2px 0 var(--blue-d);
+}
+.grey:active {
+  box-shadow: 0 2px 0 var(--grey-d);
+}
+
+@media (max-width: 560px) {
+  .hud {
+    top: calc(54px + env(safe-area-inset-top, 0px));
+    left: max(12px, env(safe-area-inset-left, 0px));
+    right: max(12px, env(safe-area-inset-right, 0px));
+    justify-content: flex-start;
+    max-width: none;
+  }
+  .chip {
+    font-size: 12px;
+    padding: 5px 10px 3px;
+  }
+}
+.hint {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 4;
+  padding-inline: 16px;
+}
+
+/* caught card */
+.cardwrap {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 8;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px));
+  pointer-events: none;
+}
+.card {
+  pointer-events: auto;
+  background: var(--card);
+  border: 7px solid var(--card-edge);
+  border-radius: 16px;
+  box-shadow: 0 18px 40px rgba(20, 30, 40, 0.45);
+  padding: 22px 26px 24px;
+  width: min(520px, 100%);
+  text-align: center;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  transform: translateY(-6vh);
+  animation: pop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+@keyframes pop {
+  from {
+    transform: translateY(-6vh) scale(0.4) rotate(-6deg);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-6vh) scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+.card h2 {
+  margin: 0;
+  color: var(--red);
+  font-size: clamp(28px, 6.4vw, 46px);
+  line-height: 1.05;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-wrap: balance;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.35);
+}
+.card .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.card .b {
+  font-size: 15px;
+  padding: 9px 16px 7px;
+}
+.card .kind {
+  margin: -6px 0 0;
+  font-weight: 800;
+  font-size: 18px;
+  color: #7a3d00;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.card .note {
+  margin: 0;
+  font-weight: 700;
+  color: var(--ink);
+}
+.blood {
+  width: 120px;
+  height: 46px;
+}
+
+/* sheets */
+.veil {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 22, 30, 0.55);
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px));
+}
+.sheet {
+  background: var(--paper);
+  border-radius: 16px;
+  width: min(460px, 100%);
+  max-height: calc(100% - 40px);
+  overflow: auto;
+  padding: 20px 22px;
+  display: grid;
+  gap: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+.sheet h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.sheet p {
+  margin: 0;
+  font-size: 14px;
+  color: #5a6670;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.sheet textarea {
+  width: 100%;
+  min-height: 240px;
+  font: 500 15px/1.5 var(--display);
+  border: 2px solid #d7dde2;
+  border-radius: 10px;
+  padding: 10px 12px;
+  resize: vertical;
+  color: var(--ink);
+  background: #fff;
+  box-sizing: border-box;
+}
+.sheet textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+.sheet .row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.sheet .b {
+  font-size: 14px;
+  padding: 8px 16px 6px;
+}
+.opt {
+  display: grid;
+  gap: 6px;
+}
+.opt > span {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #5a6670;
+}
+.sw {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sw button {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 14px;
+  border: 2px solid #d7dde2;
+  background: #fff;
+  border-radius: 999px;
+  padding: 5px 12px 3px;
+  cursor: pointer;
+  color: var(--ink);
+}
+.sw button.dot {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 50%;
+}
+.sw button[aria-pressed="true"] {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 2px var(--card) inset;
+}
+.sw button:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
