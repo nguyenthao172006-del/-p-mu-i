@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Đập Muỗi Halloween</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap"
+    />
+    <link rel="stylesheet" href="css/dap-muoi-halloween.css" />
+  </head>
+  <body>
+    <canvas id="c" aria-label="Màn chơi đập muỗi: muỗi mang tên bay quanh nhân vật"></canvas>
+
+    <div class="tag"><b id="gameTitle">Đập Muỗi Halloween</b><span id="count">…</span></div>
+    <div class="hud">
+      <button class="b chip" id="idleBtn" aria-pressed="false">Ngồi chờ</button>
+      <button class="b chip" id="pauseBtn">Tạm dừng</button>
+      <button class="b chip" id="lookBtn">Trang phục</button>
+      <button class="b chip" id="listBtn">Danh sách</button>
+      <button class="b chip" id="soundBtn">Âm thanh: bật</button>
+    </div>
+    <div class="hint" id="hint">Chạm màn hình hoặc bấm Space để đập luôn, khỏi chờ đếm ngược</div>
+
+    <div class="cardwrap" id="cardwrap" hidden>
+      <div class="card" id="card" role="dialog" aria-live="assertive">
+        <h2 id="caughtName">Tên</h2>
+        <p class="kind" id="caughtKind" hidden></p>
+        <svg class="blood" viewBox="0 0 120 46" aria-hidden="true">
+          <path d="M20 6 C26 18 32 24 32 31 a12 12 0 0 1-24 0 C8 24 14 18 20 6Z" fill="#d91f1f" />
+          <path
+            d="M100 6 C106 18 112 24 112 31 a12 12 0 0 1-24 0 C88 24 94 18 100 6Z"
+            fill="#d91f1f"
+          />
+          <g stroke="#2a2420" stroke-width="1.6" stroke-linecap="round" fill="none">
+            <path d="M60 20 l-10-9 M60 20 l10-9" />
+            <path
+              d="M57 26 l-12 4 l-3 9 M63 26 l12 4 l3 9 M58 29 l-7 10 M62 29 l7 10 M58 23 l-12-2 M62 23 l12-2"
+            />
+            <path d="M60 16 l0-9" />
+          </g>
+          <ellipse
+            cx="51"
+            cy="17"
+            rx="9"
+            ry="4"
+            fill="rgba(255,255,255,.75)"
+            stroke="#2a2420"
+            stroke-width="1"
+            transform="rotate(-25 51 17)"
+          />
+          <ellipse
+            cx="69"
+            cy="17"
+            rx="9"
+            ry="4"
+            fill="rgba(255,255,255,.75)"
+            stroke="#2a2420"
+            stroke-width="1"
+            transform="rotate(25 69 17)"
+          />
+          <ellipse cx="60" cy="30" rx="3.6" ry="10" fill="#3b302a" />
+          <circle cx="60" cy="19" r="3.4" fill="#3b302a" />
+        </svg>
+        <div class="row">
+          <button class="b red" id="nextBtn">Bắt tiếp</button>
+          <button class="b blue" id="replayBtn">Chơi lại danh sách cũ</button>
+        </div>
+        <p class="note" id="emptyNote" hidden>Hết muỗi rồi! Cả lớp đã bị gọi tên.</p>
+        <button class="b grey" id="editBtn">Đổi danh sách</button>
+      </div>
+    </div>
+
+    <div class="veil" id="listVeil" hidden>
+      <div class="sheet" role="dialog" aria-labelledby="listTitle">
+        <h3 id="listTitle">Danh sách muỗi</h3>
+        <p>
+          Mỗi dòng một tên (hoặc cách nhau bằng dấu phẩy). Danh sách có sẵn chỉ là tên mẫu, dán danh
+          sách lớp của em vào là xong.
+        </p>
+        <textarea id="namesInput" spellcheck="false"></textarea>
+        <div class="row">
+          <button class="b grey" id="listCancel">Huỷ</button>
+          <button class="b blue" id="listSave">Lưu & thả muỗi</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="veil" id="lookVeil" hidden>
+      <div class="sheet" role="dialog" aria-labelledby="lookTitle">
+        <h3 id="lookTitle">Trang phục</h3>
+        <p>Hoá trang cho nhân vật trước khi đi săn muỗi ma cà rồng 🎃</p>
+        <div class="opt">
+          <span>Giới tính</span>
+          <div class="sw" data-k="gender"></div>
+        </div>
+        <div class="opt">
+          <span>Kiểu tóc</span>
+          <div class="sw" data-k="style"></div>
+        </div>
+        <div class="opt" id="lenOpt">
+          <span>Độ dài</span>
+          <div class="sw" data-k="hair"></div>
+        </div>
+        <div class="opt">
+          <span>Màu tóc</span>
+          <div class="sw" data-k="hairColor"></div>
+        </div>
+        <div class="opt">
+          <span>Màu áo</span>
+          <div class="sw" data-k="shirt"></div>
+        </div>
+        <div class="opt">
+          <span>Trang trí nền</span>
+          <div class="sw" data-k="deco"></div>
+        </div>
+        <div class="opt">
+          <span>Phụ kiện</span>
+          <div class="sw" data-k="acc"></div>
+        </div>
+        <div class="row"><button class="b blue" id="lookDone">Xong</button></div>
+      </div>
+    </div>
+    <script src="js/dap-muoi-halloween.js"></script>
+  </body>
+</html>
